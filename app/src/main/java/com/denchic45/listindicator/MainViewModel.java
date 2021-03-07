@@ -22,7 +22,6 @@ public class MainViewModel extends ViewModel {
                 "123", "456", "789",
                 "123", "456", "789",
                 "123", "456", "789"));
-        showList.setValue(list);
     }
 
     public void onEmptyCLick() {

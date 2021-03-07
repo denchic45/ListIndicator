@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(this));
         ListIndicator listIndicator = new ListIndicator.Builder(rv)
                 .emptyView(R.layout.view_empty)
+                .startView(R.layout.view_start)
                 .errorView(R.layout.view_error)
                 .create();
 

@@ -20,11 +20,12 @@ public class ListIndicator {
     public static final String ERROR_VIEW = "ERROR_VIEW";
     public static final String LOADING_VIEW = "LOADING_VIEW";
     public static final String NETWORK_VIEW = "NETWORK_VIEW";
+    public static final String START_VIEW = "START_VIEW";
     private final RecyclerView recyclerView;
     private final ViewFlipper viewFlipper;
     private final Map<String, View> views = new HashMap<>();
 
-    public ListIndicator(@NotNull RecyclerView recyclerView, int errorView, int loadingView, int emptyView, int networkView) {
+    public ListIndicator(@NotNull RecyclerView recyclerView, int errorView, int loadingView, int emptyView, int networkView, int startView) {
         this.recyclerView = recyclerView;
         viewFlipper = new ViewFlipper(recyclerView.getContext());
         ViewGroup parent = (ViewGroup) recyclerView.getParent();
@@ -36,12 +37,16 @@ public class ListIndicator {
         addView(emptyView, EMPTY_VIEW);
         addView(loadingView, LOADING_VIEW);
         addView(networkView, NETWORK_VIEW);
-
+        addView(startView, START_VIEW);
         setAnimation();
+        if (recyclerView.getAdapter().getItemCount() == 0) {
+            showView(START_VIEW);
+        }
     }
 
     public void showView(String viewKey) {
-        recyclerView.postDelayed(() -> viewFlipper.setDisplayedChild(viewFlipper.indexOfChild(views.get(viewKey))), 50);
+        if (views.containsKey(viewKey))
+            recyclerView.postDelayed(() -> viewFlipper.setDisplayedChild(viewFlipper.indexOfChild(views.get(viewKey))), 50);
     }
 
     public void showList() {
@@ -125,7 +130,7 @@ public class ListIndicator {
     public static class Builder {
 
         private final RecyclerView recyclerView;
-        private int errorView, loadingView, emptyView, networkView;
+        private int errorView, loadingView, emptyView, networkView, startView;
 
         public Builder(RecyclerView recyclerView) {
             this.recyclerView = recyclerView;
@@ -152,8 +157,13 @@ public class ListIndicator {
             return this;
         }
 
+        public Builder startView(@LayoutRes int layoutId) {
+            this.startView = layoutId;
+            return this;
+        }
+
         public ListIndicator create() {
-            return new ListIndicator(recyclerView, errorView, loadingView, emptyView, networkView);
+            return new ListIndicator(recyclerView, errorView, loadingView, emptyView, networkView, startView);
         }
     }
 
